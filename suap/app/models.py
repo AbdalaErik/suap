@@ -8,13 +8,21 @@ class Ocupacao(models.Model):
     def __str__(self):
         return self.nome
     
+class Cidade(models.Model):
+    nome = models.CharField(max_length=50)
+    uf = models.CharField(max_length=2)
+
+    def __str__(self):
+        return f'{self.nome} {self.uf}'
+    
 class Instituicao(models.Model):
     nome = models.CharField(max_length=50)
     site = models.CharField(max_length=50)
     telefone = models.CharField(max_length=15)
+    cidade = models.ForeignKey(Cidade, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.nome} {self.site} {self.telefone}'
+        return f'{self.nome} {self.site} {self.telefone} {self.cidade}'
     
 class Area(models.Model):
     nome = models.CharField(max_length=50)
@@ -35,13 +43,6 @@ class Turma(models.Model):
     def __str__(self):
         return f'{self.nome} {self.periodo}'
     
-class Cidade(models.Model):
-    nome = models.CharField(max_length=50)
-    uf = models.CharField(max_length=2)
-
-    def __str__(self):
-        return f'{self.nome} {self.uf}'
-    
 class Tipo_De_Avaliacao(models.Model):
     tipo = models.CharField(max_length=50)
 
@@ -55,10 +56,11 @@ class Pessoa(models.Model):
     cpf = models.CharField(max_length=14)
     data_nasc = models.DateField()
     email = models.CharField(max_length=50)
+    ocupacao = models.ForeignKey(Ocupacao, on_delete=models.CASCADE)
     cidade = models.ForeignKey(Cidade, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f'{self.nome} {self.pai} {self.mae} {self.cpf} {self.data_nasc} {self.email} {self.cidade}'
+        return f'{self.nome} {self.pai} {self.mae} {self.cpf} {self.data_nasc} {self.email} {self.ocupacao} {self.cidade}'
     
 class Curso(models.Model):
     nome = models.CharField(max_length=50)
@@ -112,7 +114,6 @@ class Ocorrencia(models.Model):
 
     def __str__(self):
         return f'{self.descricao} {self.data} {self.curso} {self.disciplina} {self.pessoa}'
-
 
 class Disciplina_Por_Curso(models.Model):
     nome = models.CharField(max_length=50)
